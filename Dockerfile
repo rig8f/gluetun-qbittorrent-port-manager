@@ -1,7 +1,7 @@
 FROM python:3.14-alpine
 
 COPY ./requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip3 install --no-cache-dir -r requirements.txt
 
 ENV QBITTORRENT_SERVER=localhost
 ENV QBITTORRENT_PORT=8080
