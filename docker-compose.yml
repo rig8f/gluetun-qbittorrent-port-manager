@@ -1,5 +1,5 @@
 gluetun-qbittorrent-port-manager:
-  image: snoringdragon/gluetun-qbittorrent-port-manager:latest
+  image: rig8f/gluetun-qbittorrent-port-manager:latest
   restart: unless-stopped
   volumes:
     - /yourfolder:/tmp/gluetun #Set "yourfolder" to the same directory you used for Gluetun

@@ -1,7 +1,7 @@
-FROM alpine:latest
+FROM python:3.14-alpine
 
-RUN apk update
-RUN apk add --no-cache curl inotify-tools bash
+COPY ./requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 ENV QBITTORRENT_SERVER=localhost
 ENV QBITTORRENT_PORT=8080
@@ -9,8 +9,9 @@ ENV QBITTORRENT_USER=admin
 ENV QBITTORRENT_PASS=adminadmin
 ENV PORT_FORWARDED=tmp/gluetun/forwarded_port
 ENV HTTP_S=http
+ENV SLEEP_TIME_SEC=5
 
-COPY ./start.sh ./start.sh
-RUN chmod 770 ./start.sh
+COPY ./check.py ./check.py
+RUN chmod 770 ./check.py
 
-CMD ["./start.sh"]
+CMD ["python3", "./check.py"]
