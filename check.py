@@ -1,5 +1,5 @@
 import asyncio, os, httpx
-from watchfiles import awatch
+# from watchfiles import awatch
 
 PORT_FORWARDED = os.environ["PORT_FORWARDED"]
 QB_USER = os.environ["QBITTORRENT_USER"]
@@ -32,6 +32,7 @@ async def update_port(client: httpx.AsyncClient):
 
 async def main():
     async with httpx.AsyncClient(timeout=30) as client:
+        last_mtime = None
         while True:
             if not os.path.exists(PORT_FORWARDED):
                 print(f"Couldn't find file {PORT_FORWARDED}")
@@ -39,9 +40,14 @@ async def main():
                 await asyncio.sleep(SLEEP_TIME_SEC)
                 continue
 
-            await update_port(client)
-            async for _ in awatch(PORT_FORWARDED):
+            mtime = os.path.getmtime(PORT_FORWARDED)
+            if last_mtime is None or mtime != last_mtime:
                 await update_port(client)
+                last_mtime = mtime
+
+            # await update_port(client)
+            # async for _ in awatch(PORT_FORWARDED):
+            #     await update_port(client)
 
 
 if __name__ == "__main__":
