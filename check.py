@@ -27,7 +27,7 @@ async def update_port(client: httpx.AsyncClient):
     await client.post(PREFS_URL, data={
         "json": f'{{"listen_port":"{port}"}}'
     })
-    print(f"Successfully updated qbittorrent to port {port}")
+    print(f"Updated qbittorrent port to {port}")
 
 
 async def main():
@@ -37,13 +37,12 @@ async def main():
             if not os.path.exists(PORT_FORWARDED):
                 print(f"Couldn't find file {PORT_FORWARDED}")
                 print(f"Trying again in {SLEEP_TIME_SEC} seconds")
-                await asyncio.sleep(SLEEP_TIME_SEC)
-                continue
-
-            mtime = os.path.getmtime(PORT_FORWARDED)
-            if last_mtime is None or mtime != last_mtime:
-                await update_port(client)
-                last_mtime = mtime
+            else:
+                mtime = os.path.getmtime(PORT_FORWARDED)
+                if last_mtime is None or mtime != last_mtime:
+                    await update_port(client)
+                    last_mtime = mtime
+            await asyncio.sleep(SLEEP_TIME_SEC)
 
             # await update_port(client)
             # async for _ in awatch(PORT_FORWARDED):
